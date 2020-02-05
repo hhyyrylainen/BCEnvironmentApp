@@ -17,6 +17,10 @@
 
 using namespace bce;
 // ------------------------------------ //
+const auto ON_GITHUB =
+    std::string("This app's code is on <a "
+                "href=\"https://github.com/hhyyrylainen/BCEnvironmentApp\">Github</a>");
+// ------------------------------------ //
 Application::Application(const Wt::WEnvironment& env, Server& server,
     const std::shared_ptr<const Configuration>& config) :
     Wt::WApplication(env),
@@ -51,9 +55,6 @@ void Application::SetupCallbacks()
 
 void Application::SetupWidgets()
 {
-    const auto onGithub =
-        std::string("This app's code is on <a "
-                    "href=\"https://github.com/hhyyrylainen/BCEnvironmentApp\">Github</a>");
     // Navigation bar
     Navigation = root()->addNew<Wt::WNavigationBar>();
     Navigation->setTitle("Environmental BC App", "/");
@@ -75,46 +76,28 @@ void Application::SetupWidgets()
 
     // End of auth, begin content
 
-    Wt::WStackedWidget* contentsStack = root()->addNew<Wt::WStackedWidget>();
-    contentsStack->addStyleClass("contents");
+    ContentLevelStack = root()->addNew<Wt::WStackedWidget>();
+    ContentLevelStack->addStyleClass("contents");
+
+    SetupMainContent();
 
     // Navigation menu setup
-    // Setup a Left-aligned menu.
-    auto leftMenu = Wt::cpp14::make_unique<Wt::WMenu>(contentsStack);
-    auto leftMenu_ = Navigation->addMenu(std::move(leftMenu));
-    leftMenu_->setInternalPathEnabled("/");
+    MainNavigationMenu = Navigation->addMenu(std::make_unique<Wt::WMenu>());
+    HomeMenuItem = MainNavigationMenu->addItem("Home");
+    HomeMenuItem->setLink(Wt::WLink(Wt::LinkType::InternalPath, "/"));
 
-    leftMenu_
-        ->addItem("Home", Wt::cpp14::make_unique<Wt::WText>(
-                              "<p>Description of this web service goes here.</p>"))
-        ->setLink(Wt::WLink(Wt::LinkType::InternalPath, "/"));
-    leftMenu_
-        ->addItem("Leaderboards", Wt::cpp14::make_unique<Wt::WText>("Leaderboards contents"))
-        ->setLink(Wt::WLink(Wt::LinkType::InternalPath, "/leaderboards"));
-    leftMenu_->addItem("Badges", Wt::cpp14::make_unique<Wt::WText>("Badges content"))
-        ->setLink(Wt::WLink(Wt::LinkType::InternalPath, "/badges_stuff"));
+    LeaderboardsMenuItem = MainNavigationMenu->addItem("Leaderboards");
+    LeaderboardsMenuItem->setLink(Wt::WLink(Wt::LinkType::InternalPath, "/leaderboards"));
+
+    BadgesMenuItem = MainNavigationMenu->addItem("Badges");
+    BadgesMenuItem->setLink(Wt::WLink(Wt::LinkType::InternalPath, "/badges"));
 
     // Right side menu
-    auto rightMenu = Wt::cpp14::make_unique<Wt::WMenu>();
-    auto rightMenu_ = Navigation->addMenu(std::move(rightMenu), Wt::AlignmentFlag::Right);
+    SideNavigationMenu =
+        Navigation->addMenu(std::make_unique<Wt::WMenu>(), Wt::AlignmentFlag::Right);
 
-    auto about = rightMenu_->addItem("About");
-    about->setSelectable(false);
-    about->clicked().connect([=]() {
-        auto messageBox = rightMenu_->addChild(Wt::cpp14::make_unique<Wt::WMessageBox>("About",
-            Wt::WString(
-                "<p>This is a Behaviour Changing Gamified web App made by Henri "
-                "Hyyryläinen for the persuasive design course.</p>"
-                "<p>This site uses cookies for keeping track of logins. User login and other "
-                "data is collected in order to show how many other users there are on the "
-                "site and how well they are doing in the leaderboards</p>" +
-                onGithub),
-            Wt::Icon::Information, Wt::StandardButton::Ok));
-
-        messageBox->buttonClicked().connect([=] { rightMenu_->removeChild(messageBox); });
-
-        messageBox->show();
-    });
+    AboutMenuItem = SideNavigationMenu->addItem("About");
+    AboutMenuItem->setLink(Wt::WLink(Wt::LinkType::InternalPath, "/about"));
 
     // Footer
     root()->addWidget(std::make_unique<Wt::WBreak>());
@@ -122,15 +105,38 @@ void Application::SetupWidgets()
     root()->addWidget(
         std::make_unique<Wt::WText>("<span>Environment Behaviour Change app made by Henri "
                                     "Hyyryläinen for the PSD course. " +
-                                    onGithub + "</span>"));
+                                    ON_GITHUB + "</span>"));
 
     root()->addWidget(std::make_unique<Wt::WBreak>());
 }
 
+void Application::SetupMainContent()
+{
+    HomeContent = ContentLevelStack->addWidget(std::make_unique<Wt::WContainerWidget>());
+    HomeContent->addWidget(
+        std::make_unique<Wt::WText>("<p>Description of this web service goes here.</p>"));
+
+    LeaderboardsContent =
+        ContentLevelStack->addWidget(std::make_unique<Wt::WContainerWidget>());
+    LeaderboardsContent->addWidget(
+        std::make_unique<Wt::WText>("<p>Leaderboards content.</p>"));
+
+    BadgesContent = ContentLevelStack->addWidget(std::make_unique<Wt::WContainerWidget>());
+    BadgesContent->addWidget(std::make_unique<Wt::WText>("<p>Badges content.</p>"));
+
+    AboutContent = ContentLevelStack->addWidget(std::make_unique<Wt::WContainerWidget>());
+    AboutContent->addWidget(std::make_unique<Wt::WText>(Wt::WString(
+        "<p>This is a Behaviour Changing Gamified web App made by Henri "
+        "Hyyryläinen for the persuasive design course.</p>"
+        "<p>This site uses cookies for keeping track of logins. User login and other "
+        "data is collected in order to show how many other users there are on the "
+        "site and how well they are doing in the leaderboards</p>" +
+        ON_GITHUB)));
+}
+
 void Application::TriggerInitialStatus()
 {
-    internalPathChanged().emit(internalPath());
-    // HandlePathChanged();
+    HandlePathChanged();
 }
 // ------------------------------------ //
 void Application::finalize() {}
@@ -149,10 +155,21 @@ void Application::AuthEvent()
 // ------------------------------------ //
 void Application::HandlePathChanged()
 {
-    if(internalPath() == "/leaderboard") {
-
-    } else if(internalPath() == "/navigation/eat") {
-
+    if(internalPath() == "/leaderboards") {
+        ContentLevelStack->setCurrentWidget(LeaderboardsContent);
+        MainNavigationMenu->select(LeaderboardsMenuItem);
+        SideNavigationMenu->select(nullptr);
+    } else if(internalPath() == "/badges") {
+        ContentLevelStack->setCurrentWidget(BadgesContent);
+        MainNavigationMenu->select(BadgesMenuItem);
+        SideNavigationMenu->select(nullptr);
+    } else if(internalPath() == "/about") {
+        ContentLevelStack->setCurrentWidget(AboutContent);
+        MainNavigationMenu->select(nullptr);
+        SideNavigationMenu->select(AboutMenuItem);
     } else {
+        ContentLevelStack->setCurrentWidget(HomeContent);
+        MainNavigationMenu->select(HomeMenuItem);
+        SideNavigationMenu->select(nullptr);
     }
 }

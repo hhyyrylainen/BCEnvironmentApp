@@ -8,6 +8,7 @@
 #include <Wt/WApplication.h>
 #include <Wt/WFileUpload.h>
 #include <Wt/WLineEdit.h>
+#include <Wt/WMenuItem.h>
 #include <Wt/WNavigationBar.h>
 #include <Wt/WPanel.h>
 #include <Wt/WText.h>
@@ -31,6 +32,7 @@ private:
     void SetupTheme();
     void SetupCallbacks();
     void SetupWidgets();
+    void SetupMainContent();
     void TriggerInitialStatus();
 
 private:
@@ -40,7 +42,22 @@ private:
     Session _Session;
 
     // Widgets
+    Wt::WStackedWidget* ContentLevelStack;
+    Wt::WMenu* MainNavigationMenu;
+    Wt::WMenu* SideNavigationMenu;
     Wt::WNavigationBar* Navigation;
+
+    Wt::WMenuItem* HomeMenuItem;
+    Wt::WContainerWidget* HomeContent;
+
+    Wt::WMenuItem* LeaderboardsMenuItem;
+    Wt::WContainerWidget* LeaderboardsContent;
+
+    Wt::WMenuItem* BadgesMenuItem;
+    Wt::WContainerWidget* BadgesContent;
+
+    Wt::WMenuItem* AboutMenuItem;
+    Wt::WContainerWidget* AboutContent;
 };
 
 } // namespace bce

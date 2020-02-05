@@ -1,8 +1,13 @@
+
 RUN_COMMAND=build/src/bcenvironmentapp config/bce_options.json --docroot \
 				"build/src/;/resources" --http-address 0.0.0.0 --http-port 9090 \
 				-c config/wt_config.xml
 
 BCE_COMMAND_BASE=build/src/bcetool config/bce_options.json
+
+# For GDB run in emacs:
+# build/src/bcenvironmentapp
+# r ../../config/bce_options.json --docroot ".;/resources" --http-address 0.0.0.0 --http-port 9090 -c ../../config/wt_config.xml
 
 default: run
 
