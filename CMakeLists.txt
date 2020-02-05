@@ -58,7 +58,12 @@ install(FILES ${WT_CONFIG_FILE} DESTINATION
   ${CMAKE_INSTALL_SYSCONFDIR}/BCEnvironmentApp/)
 
 
+add_library(jsoncpp STATIC
+  jsoncpp/src/lib_json/json_reader.cpp
+  jsoncpp/src/lib_json/json_value.cpp
+  jsoncpp/src/lib_json/json_writer.cpp)
 
+target_include_directories(jsoncpp PUBLIC jsoncpp/include)
 
 add_subdirectory(src)
 # add_subdirectory(test)

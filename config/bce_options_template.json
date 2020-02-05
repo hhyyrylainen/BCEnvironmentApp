@@ -1,0 +1,10 @@
+{
+    "database": {
+        "type": "postgres",
+        "host": "localhost",
+        "port": 5432,
+        "username": "USERNAME_HERE",
+        "password": "PASSWORD_HERE",
+        "database": "bcenvironmentapp"
+    }
+}

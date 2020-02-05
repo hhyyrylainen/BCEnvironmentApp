@@ -4,10 +4,12 @@ endif()
 
 add_executable(bcenvironmentapp
   Application.h Application.cpp
+  Configuration.h Configuration.cpp
   main.cpp)
 
-target_link_libraries(bcenvironmentapp PRIVATE wt wthttp ${Boost_LIBRARIES}
-  ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(bcenvironmentapp PRIVATE wt wthttp
+  wtdbo wtdbopostgres wtdbosqlite3 jsoncpp
+  ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 target_include_directories(bcenvironmentapp PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
