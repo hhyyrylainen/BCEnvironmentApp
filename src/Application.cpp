@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "Configuration.h"
+#include "Task.h"
 
 #include <Wt/WBootstrapTheme.h>
 #include <Wt/WBreak.h>
@@ -16,8 +17,9 @@ Application::Application(
     Wt::WApplication(env),
     Config(config)
 {
+    // TODO: proper use here would use a connection pool
     session.setConnection(std::move(Config->CreateDatabaseConnection()));
-    // session.
+
 
     setTitle("Behaviour Change Environment App");
     setTheme(std::make_shared<Wt::WBootstrapTheme>());
