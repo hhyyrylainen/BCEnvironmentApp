@@ -1,9 +1,6 @@
 #include "Application.h"
-
 #include "Configuration.h"
-
-#include <Wt/WServer.h>
-
+#include "Server.h"
 
 
 #include <iostream>
@@ -39,13 +36,13 @@ int main(int argc, char** argv)
     }
 
     try {
-        Wt::WServer server(argv[0]);
+        bce::Server server(argv[0]);
 
         server.setServerConfiguration(argc, argv, WTHTTP_CONFIGURATION);
 
         server.addEntryPoint(
-            Wt::EntryPointType::Application, [config](const Wt::WEnvironment& env) {
-                return std::make_unique<bce::Application>(env, config);
+            Wt::EntryPointType::Application, [config, &server](const Wt::WEnvironment& env) {
+                return std::make_unique<bce::Application>(env, server, config);
             });
 
         if(server.start()) {

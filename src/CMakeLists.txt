@@ -7,7 +7,9 @@ endif()
 add_library(bcecommon STATIC
   Configuration.h Configuration.cpp
   Task.h Task.cpp
-  SessionMapper.h SessionMapper.cpp
+  User.h User.cpp
+  Session.h Session.cpp
+  Server.h Server.cpp
   )
 
 target_link_libraries(bcecommon PUBLIC

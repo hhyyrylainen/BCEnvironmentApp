@@ -1,5 +1,5 @@
 #include "Configuration.h"
-#include "SessionMapper.h"
+#include "Session.h"
 
 #include <boost/program_options.hpp>
 
@@ -56,27 +56,25 @@ int main(int argc, char** argv)
         return 2;
     }
 
-    Wt::Dbo::Session session;
+    std::unique_ptr<bce::Session> session;
 
     try {
-        session.setConnection(std::move(config->CreateDatabaseConnection()));
+        session = std::make_unique<bce::Session>(*config);
     } catch(const std::exception& e) {
         std::cout << "Error connecting to database: " << e.what() << "\n";
         return 2;
     }
 
-    bce::MapAllClasses(session);
-
     if(action == "tables") {
 
-        bce::PrintSQLForTables(session);
+        session->PrintSQLForTables();
 
     } else if(action == "create-tables") {
 
         std::cout << "Attempting to create all needed tables:\n";
 
         try {
-            session.createTables();
+            session->createTables();
         } catch(const std::exception& e) {
             std::cout << "ERROR: " << e.what() << "\n";
             return 2;
