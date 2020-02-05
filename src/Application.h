@@ -8,6 +8,7 @@
 #include <Wt/WApplication.h>
 #include <Wt/WFileUpload.h>
 #include <Wt/WLineEdit.h>
+#include <Wt/WNavigationBar.h>
 #include <Wt/WPanel.h>
 #include <Wt/WText.h>
 
@@ -24,11 +25,22 @@ public:
     void finalize() override;
 
     void AuthEvent();
+    void HandlePathChanged();
 
 private:
+    void SetupTheme();
+    void SetupCallbacks();
+    void SetupWidgets();
+    void TriggerInitialStatus();
+
+private:
+    // Configuration and other resources
     Server& _Server;
     std::shared_ptr<const Configuration> Config;
     Session _Session;
+
+    // Widgets
+    Wt::WNavigationBar* Navigation;
 };
 
 } // namespace bce
