@@ -33,9 +33,10 @@ Configuration::Configuration(const std::string& file)
 std::unique_ptr<Wt::Dbo::SqlConnection> Configuration::CreateDatabaseConnection() const
 {
     std::stringstream sstream;
-    sstream << "host=" << DBHost << " port=" << DBPort << " dbname=" << DBDatabaseName
-            << " user=" << DBUsername << " password=" << DBPassword << " connect_timeout=10"
-            << " application_name=bcenvironmentapp";
+    sstream << "host='" << DBHost << "' port='" << DBPort << "' dbname='" << DBDatabaseName
+            << "' user='" << DBUsername << "' password='" << DBPassword
+            << "' connect_timeout='10'"
+            << " application_name='bcenvironmentapp'";
 
     return std::make_unique<Wt::Dbo::backend::Postgres>(sstream.str());
 }
