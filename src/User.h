@@ -13,10 +13,18 @@ public:
     void persist(Action& a)
     {
         Wt::Dbo::field(a, Admin, "is_admin");
+        Wt::Dbo::field(a, DisplayName, "display_name");
+        Wt::Dbo::field(a, TotalPoints, "total_points");
+        Wt::Dbo::field(a, LastLogin, "last_login");
     }
 
 
-    bool Admin;
+    bool Admin = false;
+    std::string DisplayName;
+    float TotalPoints = 0.f;
+
+    //! Unix timestamp of last login or -1 if never logged in
+    int64_t LastLogin = -1;
 };
 } // namespace bce
 
