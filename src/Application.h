@@ -35,6 +35,8 @@ private:
     void SetupMainContent();
     void TriggerInitialStatus();
 
+    void UpdateLoggedInWidgets();
+
 private:
     // Configuration and other resources
     Server& _Server;
@@ -49,6 +51,9 @@ private:
 
     Wt::WMenuItem* HomeMenuItem;
     Wt::WContainerWidget* HomeContent;
+    //! This is used to check if all widgets have been created yet
+    Wt::WContainerWidget* HomeContentLoggedIn = nullptr;
+    Wt::WContainerWidget* HomeContentAnon;
 
     Wt::WMenuItem* LeaderboardsMenuItem;
     Wt::WContainerWidget* LeaderboardsContent;

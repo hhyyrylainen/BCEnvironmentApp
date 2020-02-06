@@ -113,7 +113,16 @@ void Application::SetupWidgets()
 void Application::SetupMainContent()
 {
     HomeContent = ContentLevelStack->addWidget(std::make_unique<Wt::WContainerWidget>());
-    HomeContent->addWidget(
+
+    HomeContentLoggedIn = HomeContent->addWidget(std::make_unique<Wt::WContainerWidget>());
+    HomeContentLoggedIn->setHidden(true);
+
+    HomeContentLoggedIn->addWidget(std::make_unique<Wt::WText>(
+        "<p>Welcome to your home screen. Here you can see your daily tasks and status.</p>"));
+
+    HomeContentAnon = HomeContent->addWidget(std::make_unique<Wt::WContainerWidget>());
+
+    HomeContentAnon->addWidget(
         std::make_unique<Wt::WText>("<p>Description of this web service goes here.</p>"));
 
     LeaderboardsContent =
@@ -137,6 +146,7 @@ void Application::SetupMainContent()
 void Application::TriggerInitialStatus()
 {
     HandlePathChanged();
+    UpdateLoggedInWidgets();
 }
 // ------------------------------------ //
 void Application::finalize() {}
@@ -151,6 +161,8 @@ void Application::AuthEvent()
     } else {
         log("notice") << "User logged out";
     }
+
+    UpdateLoggedInWidgets();
 }
 // ------------------------------------ //
 void Application::HandlePathChanged()
@@ -172,4 +184,16 @@ void Application::HandlePathChanged()
         MainNavigationMenu->select(HomeMenuItem);
         SideNavigationMenu->select(nullptr);
     }
+}
+
+void Application::UpdateLoggedInWidgets()
+{
+    // Cancel if not created yet. This happens if user logs in with cookies
+    if(!HomeContentLoggedIn)
+        return;
+
+    const auto logged = _Session.GetLogin().loggedIn();
+
+    HomeContentLoggedIn->setHidden(!logged);
+    HomeContentAnon->setHidden(logged);
 }
