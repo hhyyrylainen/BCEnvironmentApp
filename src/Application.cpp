@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "Configuration.h"
+#include "DailyTasks.h"
 #include "Server.h"
 #include "Task.h"
 
@@ -14,6 +15,8 @@
 #include <Wt/WPushButton.h>
 #include <Wt/WServer.h>
 #include <Wt/WStackedWidget.h>
+
+#include <ctime>
 
 using namespace bce;
 // ------------------------------------ //
@@ -117,8 +120,23 @@ void Application::SetupMainContent()
     HomeContentLoggedIn = HomeContent->addWidget(std::make_unique<Wt::WContainerWidget>());
     HomeContentLoggedIn->setHidden(true);
 
-    HomeContentLoggedIn->addWidget(std::make_unique<Wt::WText>(
-        "<p>Welcome to your home screen. Here you can see your daily tasks and status.</p>"));
+    // TODO: refresh this some times
+    const auto timeNow = std::time(nullptr);
+
+    const auto oneDayAgo = timeNow - (24 * 60 * 60);
+
+    const auto loggedInCount = _Session.query<int>("SELECT COUNT(*) FROM user")
+                                   .where("last_login > ?")
+                                   .bind(oneDayAgo);
+
+    HomeContentLoggedIn->addWidget(std::make_unique<Wt::WText>(Wt::WString(
+        "<p>Welcome to your home screen. Here you can see your daily tasks and status. There "
+        "are currently {1} visitors on this site. {2} users have logged in today.</p>")
+                                                                   .arg(_Server.sessions()
+                                                                            .size())
+                                                                   .arg(loggedInCount)));
+
+    Tasks = HomeContentLoggedIn->addWidget(std::make_unique<DailyTasks>());
 
     HomeContentAnon = HomeContent->addWidget(std::make_unique<Wt::WContainerWidget>());
 
@@ -158,8 +176,33 @@ void Application::AuthEvent()
         log("notice") << "User " << user.id() << " ("
                       << user.identity(Wt::Auth::Identity::LoginName) << ")"
                       << " logged in";
+
+        // user.
+
+        _Session.GetUsers().find(user);
+
+        // Wt::Dbo::Transaction transaction{_Session};
+
+        // // TODO: this is a mess
+        // LoggedInUser = _Session.find<User>().where("email = ?").bind(user.email());
+
+        // // Create user object if missing
+        // if(!LoggedInUser) {
+        //     log("notice") << "First time this user has logged in, creating their profile";
+
+        //     std::unique_ptr<User> newUser{new User()};
+        //     newUser->Email = user.email();
+        //     newUser->UpdateLastLoggedIn();
+
+        //     LoggedInUser = _Session.add(std::move(newUser));
+        // } else {
+
+        //     // Trigger last login update
+        //     LoggedInUser.modify()->UpdateLastLoggedIn();
+        // }
     } else {
         log("notice") << "User logged out";
+        LoggedInUser = nullptr;
     }
 
     UpdateLoggedInWidgets();
@@ -192,7 +235,7 @@ void Application::UpdateLoggedInWidgets()
     if(!HomeContentLoggedIn)
         return;
 
-    const auto logged = _Session.GetLogin().loggedIn();
+    const auto logged = LoggedInUser.operator bool();
 
     HomeContentLoggedIn->setHidden(!logged);
     HomeContentAnon->setHidden(logged);

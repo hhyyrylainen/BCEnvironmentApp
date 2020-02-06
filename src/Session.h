@@ -20,7 +20,7 @@ public:
 
     void PrintSQLForTables();
 
-    Wt::Auth::AbstractUserDatabase& GetUsers()
+    UserDatabase& GetUsers()
     {
         return *Users;
     }

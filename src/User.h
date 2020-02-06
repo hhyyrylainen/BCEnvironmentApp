@@ -18,6 +18,7 @@ public:
         Wt::Dbo::field(a, LastLogin, "last_login");
     }
 
+    void UpdateLastLoggedIn();
 
     bool Admin = false;
     std::string DisplayName;

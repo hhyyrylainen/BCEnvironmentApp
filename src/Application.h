@@ -17,7 +17,9 @@ namespace bce {
 
 class Configuration;
 class Server;
+class DailyTasks;
 
+//! \brief Main class for a single client connected session
 class Application : public Wt::WApplication {
 public:
     Application(const Wt::WEnvironment& env, Server& server,
@@ -42,6 +44,7 @@ private:
     Server& _Server;
     std::shared_ptr<const Configuration> Config;
     Session _Session;
+    Wt::Dbo::ptr<User> LoggedInUser;
 
     // Widgets
     Wt::WStackedWidget* ContentLevelStack;
@@ -54,6 +57,7 @@ private:
     //! This is used to check if all widgets have been created yet
     Wt::WContainerWidget* HomeContentLoggedIn = nullptr;
     Wt::WContainerWidget* HomeContentAnon;
+    DailyTasks* Tasks;
 
     Wt::WMenuItem* LeaderboardsMenuItem;
     Wt::WContainerWidget* LeaderboardsContent;
