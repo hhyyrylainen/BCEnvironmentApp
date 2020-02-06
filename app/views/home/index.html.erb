@@ -1,0 +1,13 @@
+<% if !@current_user %>
+<h1>Behaviour Change Environment App</h1>
+<p>Welcome to Behaviour Change Environment App made by Henri
+  Hyyryläinen for the persuasive system design course.
+</p>
+
+<% else %>
+
+<p>Welcome <%= @current_user.email %></p>
+
+<p>This is your home view where you can see your daily tasks and progress.</p>
+
+<% end %>
