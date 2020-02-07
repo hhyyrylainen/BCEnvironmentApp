@@ -3,13 +3,38 @@
   Hyyryläinen for the persuasive system design course.
 </p>
 
+<p>
+  The goal of this web app is to provide you with easy to do daily
+  tasks that have an impact on the environment.
+</p>
+
 You might want to <%= link_to('login', new_user_session_path) %> or perhaps
 <%= link_to('register', new_user_registration_path) %>.
 
+
+<p>
+  This app's code is on <a href="https://github.com/hhyyrylainen/BCEnvironmentApp">Github</a>
+  (once the course is over)
+</p>
+
+<p>This site uses cookies for keeping track of browsing sessions and
+  logins. User login statistics and other data is collected in order
+  to show how many other users there are on the site and how well they
+  are doing in the leaderboards.
+</p>
+
+
 <% else %>
 
-<p>Welcome <%= current_user.email %></p>
+<p>Welcome <%= current_user.email %> <%= 'you are an admin' if current_user.admin? %>
+  <%= pluralize(@daily_users, 'user')%> have logged in today.
+  <% if current_user.last_sign_in_at %>
+  You last logged in at <%= localize(current_user.last_sign_in_at, :format => :long) %>
+  <% end %>
+  </p>
 
-<p>This is your home view where you can see your daily tasks and progress.</p>
+<p>This is your home view where you can see your daily tasks and
+progress. You can view your badges in the badges view and compare your
+points against others on the leaderboards.</p>
 
 <% end %>

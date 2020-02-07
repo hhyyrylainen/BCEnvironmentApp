@@ -14,6 +14,11 @@ class User < ApplicationRecord
     admin == true
   end
 
+  def mark_action
+    # NOTE: I accidentally also added a column named last_action
+    self.last_active = DateTime.now
+  end
+
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later
   end
