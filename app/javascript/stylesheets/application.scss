@@ -1,1 +1,9 @@
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap/scss/bootstrap.scss';
+
+.alert-notice {
+    @extend .alert-info;
+}
+
+.alert-alert {
+    @extend .alert-danger;
+}
