@@ -9,5 +9,7 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  resources :users
+
   root 'home#index'
 end
