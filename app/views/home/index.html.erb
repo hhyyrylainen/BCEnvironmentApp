@@ -3,6 +3,9 @@
   Hyyryläinen for the persuasive system design course.
 </p>
 
+You might want to <%= link_to('login', new_user_session_path) %> or perhaps
+<%= link_to('register', new_user_registration_path) %>.
+
 <% else %>
 
 <p>Welcome <%= current_user.email %></p>
