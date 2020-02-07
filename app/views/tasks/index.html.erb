@@ -1,0 +1,29 @@
+<h2>Tasks</h2>
+
+<%= link_to 'Create new', new_task_path %>
+
+<%= paginate @tasks %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">name</th>
+      <th scope="col">points</th>
+      <th scope="col">difficulty</th>
+      <th scope="col">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each do |task| %>
+    <tr>
+      <th scope="row"><%= link_to task.id, task %></th>
+      <td><%= task.name %></td>
+      <td><%= task.points %></td>
+      <td><%= task.difficulty %></td>
+      <td><%= truncate(task.description, :length => 20) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+

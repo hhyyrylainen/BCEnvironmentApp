@@ -1,1 +1,23 @@
-<H2>Existing users</H2>
+<h2>Existing users</h2>
+<%= paginate @users %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">email</th>
+      <th scope="col">admin?</th>
+      <th scope="col">login</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |u| %>
+    <tr>
+      <th scope="row"><%= u.id %></th>
+      <td><%= u.email %></td>
+      <td><%= u.admin? %></td>
+      <td><%= u.current_sign_in_at %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

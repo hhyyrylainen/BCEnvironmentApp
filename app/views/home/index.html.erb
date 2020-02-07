@@ -29,7 +29,8 @@
 
 <% else %>
 
-<p>Welcome <%= current_user.email %> <%= 'you are an admin' if current_user.admin? %>
+<p>Welcome <%= link_to(current_user.email, edit_user_registration_path) %>
+  <%= 'you are an admin' if current_user.admin? %>
   <%= pluralize(@daily_users, 'user')%> have logged in today.
   <% if current_user.last_sign_in_at %>
   You last logged in at <%= localize(current_user.last_sign_in_at, :format => :long) %>
