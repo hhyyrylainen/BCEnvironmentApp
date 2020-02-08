@@ -1,0 +1,6 @@
+<% if user_signed_in? && !current_user.username %>
+<div>
+  You need to set an username to be able to compete on the leaderboards! Set it in your
+  <%= link_to('profile', profile_path) %>.
+</div>
+<% end %>

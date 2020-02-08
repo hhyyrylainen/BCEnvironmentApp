@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'profile', to: 'profile#index'
   get 'badges', to: 'badges#index'
   get 'leaderboards', to: 'leaderboards#index'
   devise_for :users

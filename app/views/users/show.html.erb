@@ -1,0 +1,36 @@
+<h2>User '<%= @user.email %>' (<%= @user.id %>)</h2>
+
+<% if @user == current_user %>
+<p>
+  This is your account. It is recommended to edit through your
+  <%= link_to('profile', profile_path) %>.
+</p>
+<% end %>
+
+<p>
+  TODO: allow changing email. That needs some integration with devise.
+</p>
+
+<%= form_with model: @user, local: true do |form| %>
+  <div class="form-group">
+    <%= form.label :username, 'Name to appear on the leaderboards' %>
+    <%= form.text_field :username, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= form.label :points, "User's granted points" %>
+    <%= form.number_field :points, class: 'form-control' %>
+  </div>
+  <%= form.submit class: 'btn btn-primary' %>
+<% end %>
+
+<div>User's badges:</div>
+<ul>
+  <% !@user.granted_badges.each do |badge| %>
+  <li><%= badge.name %></li>
+  <% end %>
+</ul>
+
+<p>
+  <%= link_to 'DELETE this user', user_path(@user), method: :delete,
+              data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'  %>
+</p>

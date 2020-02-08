@@ -17,7 +17,7 @@
 
 <p>
   This app's code is on <a href="https://github.com/hhyyrylainen/BCEnvironmentApp">Github</a>
-  (once the course is over)
+  (once the course is over. The repository is currently private)
 </p>
 
 <p>This site uses cookies for keeping track of browsing sessions and
@@ -29,7 +29,7 @@
 
 <% else %>
 
-<p>Welcome <%= link_to(current_user.email, edit_user_registration_path) %>
+<p>Welcome <%= link_to(current_user.email, profile_path) %>
   <%= 'you are an admin' if current_user.admin? %>
   <%= pluralize(@daily_users, 'user')%> have logged in today.
   <% if current_user.last_sign_in_at %>

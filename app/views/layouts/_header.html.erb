@@ -9,22 +9,28 @@
       <li class="nav-item <%= 'active' if controller_name == 'home' %>">
         <a class="nav-link" href="/">Home</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/leaderboards">Leaderboards</a>
+      <li class="nav-item <%= 'active' if controller_name == 'leaderboards' %>">
+        <%= link_to('Leaderboards', leaderboards_path, class: 'nav-link') %>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/badges">Badges</a>
+      <li class="nav-item <%= 'active' if controller_name == 'badges' %>">
+        <%= link_to('Badges', badges_path, class: 'nav-link') %>
       </li>
       <% if current_user&.admin? %>
       <li class="nav-item <%= 'active' if controller_name == 'tasks' %>">
-        <a class="nav-link" href="/tasks">Tasks</a>
+        <%= link_to('Tasks', tasks_path, class: 'nav-link') %>
+      </li>
+      <li class="nav-item <%= 'active' if controller_name == 'users' %>">
+        <%= link_to('Users', users_path, class: 'nav-link') %>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/users">Users</a>
-      </li>
+        <a class="nav-link" href="/sidekiq">Sidekiq</a>
+      </li>      
       <% end %>
 
       <% if user_signed_in? %>
+        <li class="nav-item <%= 'active' if controller_name == 'profile' %>">
+          <%= link_to('Settings', profile_path, class: 'nav-link') %>
+        </li>
         <li class="nav-item">
           <%= link_to('Logout', destroy_user_session_path, method: :delete,
               class: 'nav-link') %>

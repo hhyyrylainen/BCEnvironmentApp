@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
+# TODO: having a points curve would probably be better
+POINTS_PER_LEVEL = 100
+
+# Main user model
 class User < ApplicationRecord
+  NULL_ATTRS = %w[username].freeze
+
   # Include default devise modules. Others available are:
   # , :lockable, :timeoutable,  and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -12,8 +18,18 @@ class User < ApplicationRecord
 
   has_many :granted_badges
 
+  before_validation :nil_if_blank
+
   def admin?
     admin == true
+  end
+
+  def level
+    if !points
+      0
+    else
+      (points / POINTS_PER_LEVEL).floor.to_i
+    end
   end
 
   def mark_action
@@ -23,5 +39,11 @@ class User < ApplicationRecord
 
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later
+  end
+
+  protected
+
+  def nil_if_blank
+    NULL_ATTRS.each { |attr| self[attr] = nil if self[attr].blank? }
   end
 end

@@ -6,6 +6,7 @@
     <tr>
       <th scope="col">id</th>
       <th scope="col">email</th>
+      <th scope="col">username</th>
       <th scope="col">admin?</th>
       <th scope="col">login</th>
     </tr>
@@ -13,8 +14,9 @@
   <tbody>
     <% @users.each do |u| %>
     <tr>
-      <th scope="row"><%= u.id %></th>
+      <th scope="row"><%= link_to u.id, u %></th>
       <td><%= u.email %></td>
+      <td><%= u.username %></td>      
       <td><%= u.admin? %></td>
       <td><%= u.current_sign_in_at %></td>
     </tr>

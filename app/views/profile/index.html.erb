@@ -1,0 +1,30 @@
+<h1>Your Profile</h1>
+
+<%= 'you are an admin' if current_user.admin? %>
+
+<p>
+  Your email is: <%= current_user.email %>. You can change your email and password
+  <%= link_to('here', edit_user_registration_path) %>. You may also delete your
+  account on that page.
+</p>
+
+<p>
+  You last logged in at <%= localize(current_user.last_sign_in_at, :format => :long) %>.
+  Your current login session started at: <%= localize(
+                                             current_user.current_sign_in_at,
+                                             :format => :long) %>.
+  You have signed in <%= pluralize(current_user.sign_in_count, 'time') %>.
+</p>
+
+<p>
+  To participate on the leaderboards you must set an username.
+</p>
+
+<%= form_with model: current_user, local: true do |form| %>
+  <div class="form-group">
+    <%= form.label :username, 'Name to appear on the leaderboards' %>
+    <%= form.text_field :username, class: 'form-control' %>
+  </div>
+  <%= form.submit class: 'btn btn-primary' %>
+<% end %>
+
