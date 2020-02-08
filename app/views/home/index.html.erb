@@ -60,20 +60,32 @@
 
 <div>
   <h3>Tasks</h3>
-  <p>These are your daily tasks:</p>
-  <%= form_for "home", url: "home/done", local: true do |form| %>
+  <p>These are your daily tasks (left: <%= @tasks_left.size %>):</p>
+  <%= form_for "home", url: "/home/done", local: true do |form| %>
   <ul>
-  <li>
-  </li>
+    <% @tasks_left.each do |task| %>
+      <li>
+        <%= form.check_box "completed_#{task.id}" %> <strong><%= task.task.name %></strong>
+        <%= task.task.description %>
+      </li>        
+    <% end %>
   </ul>
   <%= form.submit "Mark Done", class: 'btn btn-primary' %>
   <% end %>
 
+  <% if !@tasks_done.empty? %>
   <p>You have already completed these tasks:</p>
+  <%= form_for "home", url: "/home/undo", local: true do |form| %>
   <ul>
-  <li>
-  </li>
-  </ul>  
+    <% @tasks_done.each do |task| %>
+      <li>
+        <%= task.task.name %>
+      </li>        
+    <% end %>
+  </ul>
+  <%= form.submit "Undo Completion", class: 'btn btn-warning' %>
+  <% end %>
+  <% end %>
 </div>
 
 <% end %>

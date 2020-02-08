@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get 'leaderboards', to: 'leaderboards#index'
   devise_for :users
   get 'home/index'
+  post 'home/done'
+  post 'home/undo'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   authenticate :user, ->(user) { user.admin? } do

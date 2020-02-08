@@ -2,8 +2,7 @@ BCEnvironmentApp
 ================
 
 This is a behaviour changing app for environmentally good
-behaviours. This is implemented as a web app using Wt. Written in C++
-17.
+behaviours. This is implemented as a web app using ruby on rails.
 
 This project was done for the persuasive design course at the
 University of Oulu.
@@ -13,56 +12,33 @@ See LICENSE for licensing terms of this code.
 Running
 -------
 
-Runs in a docker container for maximum portability.
+Pretty standard rails workflow.
 
-Available from docker hub with `docker pull hhyyrylainen/bcenvironmentapp:latest`
-
-Running:
-```sh
-docker run -itd -p 9090:9090 --restart always --name bcenvironmentapp hhyyrylainen/bcenvironmentapp:latest --http-port 9090
-```
-
-That command starts a container that is in the background running the service
-and automatically restarting when needed. You can use `docker ps` to
-see the running container's name in order to stop it, for example when
-upgrading the service version.
-
-You can then access post 9090 on the host to access the app.
-
-TODO: add a way to configure the database details
-
-Building
---------
-
-### Docker build
-
-```
-git submodule update --init
-docker build .
-```
-
-### Native build
-
-It's also possible to compile and run this on the host provided all
-the needed libraries and tools are installed.
-
-Rough steps:
+After cloning run (NOTE: you might want to setup rbenv first to get
+the right ruby version):
 
 ```sh
-gem install os colorize rubyzip json sha3
-./setup.rb
-
+bundle install --production --path vendor/bundle
+bundle exec rails db:create
+bundle exec rails db:migrate
+bundle exec rails assets:precompile
 ```
 
-On OSes other than Ubuntu or Fedora you will want to run the setup
-with `--no-packagemanager` parameter.
+And then run rails and sidekiq with the correct environment variables
+set. For example with systemd service files.
 
-Note: Windows build might work but is untested.
 
-You can then for example run the compiled program like this:
+After setting up you need to run this rake task once:
+
 ```sh
-build/src/bcenvironmentapp --docroot build/src/ --http-address 0.0.0.0 --http-port 9090 -c config/wt_config.xml
+bundle exec rake bce:check_tasks
 ```
 
-You can check the `Makefile` for example commands how to rebuild and
-run after minimal changes.
+to start the background jobs that remind users and refresh the daily
+tasks.
+
+
+After registering you can make your account an admin with this:
+```sh
+bundle exec rake bce:grant_admin[your@email.here]
+```

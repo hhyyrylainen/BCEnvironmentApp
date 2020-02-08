@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_08_105210) do
+ActiveRecord::Schema.define(version: 2020_02_08_215426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "daily_tasks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "task_id", null: false
+    t.boolean "complete"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["task_id"], name: "index_daily_tasks_on_task_id"
+    t.index ["user_id"], name: "index_daily_tasks_on_user_id"
+  end
 
   create_table "granted_badges", force: :cascade do |t|
     t.string "name"
@@ -54,9 +64,12 @@ ActiveRecord::Schema.define(version: 2020_02_08_105210) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.datetime "last_action"
+    t.datetime "last_notified"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "daily_tasks", "tasks"
+  add_foreign_key "daily_tasks", "users"
   add_foreign_key "granted_badges", "users"
 end

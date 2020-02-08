@@ -7,4 +7,7 @@ class Task < ApplicationRecord
   validates :points, numericality: true
   # Our form seems to add .0 after even integer numbers
   validates :difficulty, numericality: true # { only_integer: true }
+
+  # Make sure daily tasks that depend on this task are destroyed if this task is destroyed
+  has_many :daily_tasks, dependent: :destroy
 end

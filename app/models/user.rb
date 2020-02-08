@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # TODO: having a points curve would probably be better
-POINTS_PER_LEVEL = 100.0
+POINTS_PER_LEVEL ||= 100.0
 
 # Main user model
 class User < ApplicationRecord
@@ -16,7 +16,8 @@ class User < ApplicationRecord
 
   validates :username, length: { maximum: 100, minimum: 5 }, allow_nil: true
 
-  has_many :granted_badges
+  has_many :granted_badges, dependent: :destroy
+  has_many :daily_tasks, dependent: :destroy
 
   before_validation :nil_if_blank
 
@@ -45,11 +46,25 @@ class User < ApplicationRecord
 
   def mark_action
     # NOTE: I accidentally also added a column named last_action
-    self.last_active = DateTime.now
+    self.last_active = Time.now
   end
 
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later
+  end
+
+  def daily_task_count
+    5
+  end
+
+  def recreate_daily_tasks
+    logger.info "Creating daily tasks for user: #{email}"
+    # Destroy old
+    daily_tasks.destroy_all
+
+    Task.order('RANDOM()').limit(daily_task_count).each { |task|
+      daily_tasks.create task: task, complete: false
+    }
   end
 
   protected
