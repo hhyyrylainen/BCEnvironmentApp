@@ -1,0 +1,48 @@
+<p>
+  A total of <%= pluralize(@total_badges, 'badge') %> have been granted to
+  <%= pluralize(@total_users, 'user') %>.
+</p>
+
+<% if user_signed_in? %>
+<h3>Your Badges</h3>
+<% if @badges.empty? %>
+<p>You have not received any badges yet. See below for how to get badges.</p>
+<% else %>
+<ul>
+  <% !@badges.each do |badge| %>
+  <li><%= badge.name %></li>
+  <% end %>
+</ul>
+<% end %>
+<% else %>
+<p>
+  <%= link_to('Login', new_user_session_path) %> to see your badges.
+</p>
+<% end %>
+
+<h3>Available Badges</h3>
+<p>This is a list of available badges.</p>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Repeatable</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>First Task</td>
+      <td>No</td>
+      <td>Complete your first daily task.</td>
+    </tr>
+    <tr>
+      <td>All Done</td>
+      <td>Yes</td>
+      <td>Finish all your daily tasks.</td>
+    </tr>
+  </tbody>
+</table>
+

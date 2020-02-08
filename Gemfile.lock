@@ -73,6 +73,7 @@ GEM
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
     childprocess (3.0.0)
+    coderay (1.1.2)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
     crass (1.0.6)
@@ -125,6 +126,12 @@ GEM
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
     pg (1.2.2)
+    pry (0.12.2)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+    pry-doc (1.0.0)
+      pry (~> 0.11)
+      yard (~> 0.9.11)
     public_suffix (4.0.3)
     puma (4.3.1)
       nio4r (~> 2.0)
@@ -231,6 +238,7 @@ GEM
     websocket-extensions (0.1.4)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yard (0.9.24)
     zeitwerk (2.2.2)
 
 PLATFORMS
@@ -247,6 +255,8 @@ DEPENDENCIES
   kaminari
   listen (>= 3.0.5, < 3.2)
   pg
+  pry
+  pry-doc
   puma (~> 4.1)
   rails (~> 6.0.2, >= 6.0.2.1)
   redis (~> 4.0)

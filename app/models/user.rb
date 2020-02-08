@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   validates :username, length: { maximum: 100, minimum: 5 }, allow_nil: true
 
+  has_many :granted_badges
+
   def admin?
     admin == true
   end
