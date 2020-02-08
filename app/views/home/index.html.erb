@@ -37,8 +37,43 @@
   <% end %>
   </p>
 
-<p>This is your home view where you can see your daily tasks and
-progress. You can view your badges in the badges view and compare your
-points against others on the leaderboards.</p>
+<p>
+  This is your home view where you can see your daily tasks and
+  progress. You can view your badges in the badges view and compare
+  your points against others on the leaderboards.
+</p>
+
+<% progress = @level_progress * 100 %>
+
+<div>
+  <h3>Level Progress</h3>
+  <div class="progress">
+    <div class="progress-bar w-<%= progress %>" role="progressbar"
+         aria-valuenow="<%= progress %>" aria-valuemin="0"
+         aria-valuemax="100"></div>
+  </div>
+  You are currently at level <%= @current_level %>.
+  You need <%= pluralize(@points_left, 'point')%> to level up.
+  You have <%= pluralize(current_user.granted_badges.count, 'badge') %>,
+  see all of your badges <%= link_to('here', badges_path) %>.
+</div>
+
+<div>
+  <h3>Tasks</h3>
+  <p>These are your daily tasks:</p>
+  <%= form_for "home", url: "home/done", local: true do |form| %>
+  <ul>
+  <li>
+  </li>
+  </ul>
+  <%= form.submit "Mark Done", class: 'btn btn-primary' %>
+  <% end %>
+
+  <p>You have already completed these tasks:</p>
+  <ul>
+  <li>
+  </li>
+  </ul>  
+</div>
 
 <% end %>

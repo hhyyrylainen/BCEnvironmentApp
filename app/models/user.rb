@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # TODO: having a points curve would probably be better
-POINTS_PER_LEVEL = 100
+POINTS_PER_LEVEL = 100.0
 
 # Main user model
 class User < ApplicationRecord
@@ -29,6 +29,17 @@ class User < ApplicationRecord
       0
     else
       (points / POINTS_PER_LEVEL).floor.to_i
+    end
+  end
+
+  def level_progress
+    if !points
+      [0, POINTS_PER_LEVEL]
+    else
+
+      points_over_last_level = points - level * POINTS_PER_LEVEL
+
+      [points_over_last_level / POINTS_PER_LEVEL, POINTS_PER_LEVEL - points_over_last_level]
     end
   end
 
