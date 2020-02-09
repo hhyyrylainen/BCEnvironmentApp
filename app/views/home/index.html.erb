@@ -55,7 +55,8 @@
          aria-valuemax="100"><%= progress %>%</div>
   </div>
   You are currently at level <%= @current_level %>.
-  You need <%= pluralize(@points_left, 'point')%> to level up.
+  You have a total of <%= pluralize(@points, 'point')%>,
+  you need <%= pluralize(@points_left, 'point')%> to level up.
   You have <%= pluralize(current_user.granted_badges.count, 'badge') %>,
   see all of your badges <%= link_to('here', badges_path) %>.
 </div>
@@ -64,6 +65,7 @@
   <h3>Tasks</h3>
   <% if @tasks_left.empty? %>
   <h3>Congratulations! You have completed all your daily tasks!</h3>
+  <p>Check back tomorrow for more tasks.</p>
   <% else %>
   <p>These are your daily tasks (left: <%= @tasks_left.size %>):</p>
   <%= form_for "home", url: "/home/done", local: true do |form| %>

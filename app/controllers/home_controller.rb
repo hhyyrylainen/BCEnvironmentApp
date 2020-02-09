@@ -21,7 +21,10 @@ class HomeController < ApplicationController
     @tasks_left = tasks_left tasks
     @tasks_done = tasks.filter(&:complete)
     @current_level = current_user.level
+    @points = current_user.points
     @level_progress, @points_left = current_user.level_progress
+
+    @points = 0 if @points.nil?
   end
 
   def done
@@ -30,6 +33,7 @@ class HomeController < ApplicationController
     return if problem
 
     unless tasks.empty?
+      level_before = current_user.level
       tasks.each { |daily_task|
         logger.info "User (#{current_user.email}) has completed daily task: #{daily_task.id}"
 
@@ -43,6 +47,12 @@ class HomeController < ApplicationController
       current_user.mark_action
       grant_badges
       current_user.save!
+
+      new_level = current_user.level
+
+      if new_level > level_before
+        flash[:notice] = "Congratulations on leveling up to level #{new_level}!"
+      end
     end
 
     redirect_to home_index_path
