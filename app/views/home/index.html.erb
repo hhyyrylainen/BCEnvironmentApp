@@ -43,14 +43,16 @@
   your points against others on the leaderboards.
 </p>
 
-<% progress = @level_progress * 100 %>
+<% progress = (@level_progress * 100).to_i %>
 
 <div>
   <h3>Level Progress</h3>
   <div class="progress">
-    <div class="progress-bar w-<%= progress %>" role="progressbar"
+    <div class="progress-bar"
+         style="width: <%= progress %>%;"
+         role="progressbar"
          aria-valuenow="<%= progress %>" aria-valuemin="0"
-         aria-valuemax="100"></div>
+         aria-valuemax="100"><%= progress %>%</div>
   </div>
   You are currently at level <%= @current_level %>.
   You need <%= pluralize(@points_left, 'point')%> to level up.
@@ -60,6 +62,9 @@
 
 <div>
   <h3>Tasks</h3>
+  <% if @tasks_left.empty? %>
+  <h3>Congratulations! You have completed all your daily tasks!</h3>
+  <% else %>
   <p>These are your daily tasks (left: <%= @tasks_left.size %>):</p>
   <%= form_for "home", url: "/home/done", local: true do |form| %>
   <ul>
@@ -72,6 +77,7 @@
   </ul>
   <%= form.submit "Mark Done", class: 'btn btn-primary' %>
   <% end %>
+  <% end %>
 
   <% if !@tasks_done.empty? %>
   <p>You have already completed these tasks:</p>
@@ -79,7 +85,7 @@
   <ul>
     <% @tasks_done.each do |task| %>
       <li>
-        <%= task.task.name %>
+        <%= form.check_box "completed_#{task.id}" %> <%= task.task.name %>
       </li>        
     <% end %>
   </ul>

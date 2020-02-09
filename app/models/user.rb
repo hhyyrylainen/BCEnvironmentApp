@@ -63,7 +63,7 @@ class User < ApplicationRecord
     daily_tasks.destroy_all
 
     Task.order('RANDOM()').limit(daily_task_count).each { |task|
-      daily_tasks.create task: task, complete: false
+      daily_tasks.create! task: task, complete: false
     }
   end
 
