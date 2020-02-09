@@ -10,7 +10,8 @@
 <% else %>
 <ul>
   <% !@badges.each do |badge| %>
-  <li><%= badge.name %></li>
+  <li><strong><%= badge.name %></strong> granted on
+    <%= localize(badge.created_at, :format => :long) %></li>
   <% end %>
 </ul>
 <% end %>
