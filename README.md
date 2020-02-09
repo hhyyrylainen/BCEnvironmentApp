@@ -18,10 +18,9 @@ After cloning run (NOTE: you might want to setup rbenv first to get
 the right ruby version):
 
 ```sh
-bundle install --production --path vendor/bundle
-bundle exec rails db:create
-bundle exec rails db:migrate
-bundle exec rails assets:precompile
+bundle install --deployment --path vendor/bundle
+bundle exec rails secret # replace KEY with the output from this
+SECRET_KEY_BASE=KEY RAILS_ENV=production bundle exec rails db:create db:migrate assets:clobber assets:precompile
 ```
 
 And then run rails and sidekiq with the correct environment variables
