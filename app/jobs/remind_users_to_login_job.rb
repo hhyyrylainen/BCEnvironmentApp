@@ -23,8 +23,18 @@ class RemindUsersToLoginJob < ApplicationJob
       elapsed = Time.now - compare_against
       next unless elapsed > REMIND_USER_LIMIT
 
-      # Skip if it has been more than a week
-      next if elapsed > STOP_REMINDERS_AFTER
+      # Skip if it has been more than a week without action or new login
+      compare_against = [user.current_sign_in_at, user.last_active].reject(&:nil?).max
+
+      unless compare_against.nil?
+        elapsed = Time.now - compare_against
+
+        if elapsed > STOP_REMINDERS_AFTER
+          logger.info "Not sending more reminders to #{user.email} " \
+                      "because they've been offline for: #{elapsed}"
+          next
+        end
+      end
 
       logger.info "Reminding #{user.email} to login, elapsed since login: #{elapsed}"
       user.last_notified = Time.now
